@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -6,6 +6,8 @@ import (
 	"log"
 )
 
+// Should I make a test for this code? I think yes...
+// Should display 3.44.0
 func DisplaySqliteVersion() {
 	db, err := sql.Open("sqlite3", ":memory:")
 
@@ -22,5 +24,5 @@ func DisplaySqliteVersion() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(version)
+	fmt.Println("Sqlite3 version:", version)
 }

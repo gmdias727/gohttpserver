@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"database/sql"
@@ -23,7 +23,8 @@ func DatabaseInit() {
 	defer file.Close()
 
 	createBooksTable()
-	showAllBooks()
+	// showAllBooks()
+	// booksHandler()
 }
 
 func createBooksTable() {
@@ -38,11 +39,8 @@ func createBooksTable() {
 	DROP TABLE IF EXISTS books;
 	CREATE TABLE books (
 		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		title TEXT NOT NULL,
-		isbn TEXT NOT NULL UNIQUE
+		title TEXT NOT NULL
 	);
-	INSERT INTO books(title, isbn) VALUES('Getulio, O Cavaleiro', '123-456-789');
-	INSERT INTO books(title, isbn) VALUES('Giraldo, O Poeta', '789-456-123');
 	`
 
 	log.Println("Executing the create books table query")
