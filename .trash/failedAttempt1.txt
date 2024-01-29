@@ -1,0 +1,57 @@
+// book should be saved in request body
+	// book := Book{Title: "John Doe"}
+
+	// resp := make(map[string]Book)
+	// resp["Book"] = book
+
+	// jsonResp, err := json.Marshal(resp)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// log.Println(jsonResp)
+	// w.Write(jsonResp)
+
+	db, err := sql.Open("sqlite3", "./database/books.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	newBook := "John Doe"
+	query, err := db.Query(`INSERT INTO books (title) VALUES("%s");`, newBook)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer query.Close()
+
+	queryConfirm, err := db.Query(`SELECT * FROM books`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer queryConfirm.Close()
+
+	for queryConfirm.Next() {
+		var title string
+		if err := queryConfirm.Scan(&title); err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("book: %s", title)
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	log.Printf("Book: %s saved to database", newBook)
+
+	// resp, err := "application/json", bytes.NewBuffer(json_data)
+
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer resp.Body.Close()
+
+	// var res map[string]interface{}
+
+	// json.NewDecoder(resp.Body).Decode(&res)
+	// log.Println(res)

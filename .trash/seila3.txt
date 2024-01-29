@@ -1,0 +1,54 @@
+func getAllBooks() []Book {
+	db, err := sql.Open("sqlite3", "./database/books.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	query, err := db.Query("SELECT * FROM books")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer query.Close()
+
+	var books []Book
+
+	for query.Next() {
+		var (
+			id    int
+			title string
+		)
+
+		err = query.Scan(&id, &title)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		books = append(books, Book{
+			Id:    id,
+			Title: title,
+		})
+	}
+	fmt.Println(books)
+	return books
+}
+
+func createOneBook(title string) {
+	db, err := sql.Open("sqlite3", "./database/books.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	stmt := `
+	INSERT INTO books (title)
+	VALUES('Giraldo, O Cavaleiro Parte 2')
+	`
+	log.Println("Querying a new book into books")
+	_, err = db.Exec(stmt)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Query successfull")
+}
